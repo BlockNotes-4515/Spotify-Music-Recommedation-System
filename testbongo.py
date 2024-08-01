@@ -636,69 +636,83 @@ def recommend_songs( song_list, spotify_data, n_songs=10):
 #     main()
 
 """=================================== NEURAL NEXUS =============================="""
-import streamlit as st
-import pandas as pd
-import numpy as np
-from scipy.spatial.distance import cdist
+# import streamlit as st
+# import pandas as pd
+# import numpy as np
+# from scipy.spatial.distance import cdist
 
-# Assuming these functions are defined elsewhere in your code
-# from your_module import flatten_dict_list, get_mean_vector, song_cluster_pipeline
+# # Assuming these functions are defined elsewhere in your code
+# def flatten_dict_list(dict_list):
+#     # Your implementation here
+#     pass
 
-@st.cache_data
-# def load_spotify_data():
-#     return pd.read_csv("spotify_data.csv")
+# def get_mean_vector(song_list, spotify_data):
+#     # Your implementation here
+#     pass
 
-def recommend_songs(song_list, data, n_songs=10):
-    metadata_cols = ['name', 'year', 'artists']
-    song_dict = flatten_dict_list(song_list)
+# # Function to recommend songs
+# def recommend_songs(song_list, spotify_data, n_songs=10):
+#     metadata_cols = ['name', 'year', 'artists']
+#     song_dict = flatten_dict_list(song_list)
 
-    song_center = get_mean_vector(song_list, data)
-    scaler = song_cluster_pipeline.steps[0][1]
-    scaled_data = scaler.transform(data[number_cols])
-    scaled_song_center = scaler.transform(song_center.reshape(1, -1))
-    distances = cdist(scaled_song_center, scaled_data, 'cosine')
-    index = list(np.argsort(distances)[:, :n_songs][0])
+#     song_center = get_mean_vector(song_list, spotify_data)
+#     scaler = song_cluster_pipeline.steps[0][1]
+#     scaled_data = scaler.transform(spotify_data[number_cols])
+#     scaled_song_center = scaler.transform(song_center.reshape(1, -1))
+#     distances = cdist(scaled_song_center, scaled_data, 'cosine')
+#     index = list(np.argsort(distances)[:, :n_songs][0])
 
-    rec_songs = data.iloc[index]
-    rec_songs = rec_songs[~rec_songs['name'].isin(song_dict['name'])]
-    return rec_songs[metadata_cols].to_dict(orient='records')
+#     rec_songs = spotify_data.iloc[index]
+#     rec_songs = rec_songs[~rec_songs['name'].isin(song_dict['name'])]
+#     return rec_songs[metadata_cols].to_dict(orient='records')
 
-def main():
-    st.title("🎵 Welcome to Spotify (MusicX) 🎵")
-    st.header("Please register:")
+# # Streamlit app
+# def main():
+#     st.title("WELCOME TO THE SPOTIFY (MUSICX)")
+    
+#     st.header("Please register:")
+#     name = st.text_input("1. Enter your name:")
+#     age = st.number_input("2. Enter your age:", min_value=0)
+#     gender = st.selectbox("3. Enter your gender:", ["M", "F"])
 
-    if 'name' not in st.session_state:
-        st.session_state['name'] = ''
-    if 'age' not in st.session_state:
-        st.session_state['age'] = 0
-    if 'gender' not in st.session_state:
-        st.session_state['gender'] = 'M'
-    if 'language' not in st.session_state:
-        st.session_state['language'] = 'English'
-    if 'song_type' not in st.session_state:
-        st.session_state['song_type'] = 'Rock'
-    if 'song_list' not in st.session_state:
-        st.session_state['song_list'] = []
+#     language_option = st.selectbox("4. Select Language:", ["Hindi", "English", "Other"])
+#     language = {
+#         'Hindi': 'Hindi',
+#         'English': 'English',
+#         'Other': 'Other'
+#     }.get(language_option, 'Other')
 
-    st.session_state['name'] = st.text_input("1. Enter your name:", st.session_state['name'])
-    st.session_state['age'] = st.number_input("2. Enter your age:", min_value=0, max_value=120, step=1, value=st.session_state['age'])
-    st.session_state['gender'] = st.selectbox("3. Enter your gender:", ["M", "F", "Other"], index=["M", "F", "Other"].index(st.session_state['gender']))
-    st.session_state['language'] = st.selectbox("4. Select Language:", ["Hindi", "English", "Other"], index=["Hindi", "English", "Other"].index(st.session_state['language']))
-    st.session_state['song_type'] = st.selectbox("5. Select your preferred song type:", ["Rock", "Romantic", "Neon", "Peace", "Hip-Hop"], index=["Rock", "Romantic", "Neon", "Peace", "Hip-Hop"].index(st.session_state['song_type']))
+#     song_type_option = st.selectbox("6. Select your preferred song type:", ["Rock", "Romantic", "Neon", "Peace", "Hip-Hop"])
+#     song_type = {
+#         'Rock': 'Rock',
+#         'Romantic': 'Romantic',
+#         'Neon': 'Neon',
+#         'Peace': 'Peace',
+#         'Hip-Hop': 'Hip-Hop'
+#     }.get(song_type_option, 'Rock')
 
-    if st.button("Submit"):
-        st.success("Registered Successfully!")
-    else:
-        st.warning("Not Registered. Only Free Music Available without Premium")
+#     if st.button("Submit"):
+#         st.success("Registered Successfully!")
+#     else:
+#         st.warning("Not Registered. Only Free Music Available without Premium")
+#         return
 
-    st.header("Enter the songs you like:")
-    song_name = st.text_input("Enter the name of a song you like (or type 'done' to finish):")
-    if song_name.lower() != 'done' and song_name:
-        artist_name = st.text_input("Enter the name of the artist:")
-        song_year = st.number_input("Enter the release year of the song:", min_value=1900, max_value=2024, step=1)
-        st.session_state['song_list'].append({'name': song_name, 'year': song_year, 'artists': artist_name})
+#     song_list = []
+#     st.header("Enter the songs you like:")
+#     while True:
+#         song_name = st.text_input("Enter the name of a song you like (or type 'done' to finish):")
+#         if song_name.lower() == 'done':
+#             break
+#         artist_name = st.text_input("1. Enter the name of the artist:")
+#         song_year = st.number_input("2. Enter the release year of the song:", min_value=0)
+#         song_list.append({'name': song_name, 'year': song_year, 'artists': artist_name})
 
-   
+#     if song_list:
+#         recommendations = recommend_songs(song_list, data)
+#         st.header("Recommended Songs:")
+#         for song in recommendations:
+#             st.write(f"{song['name']} by {song['artists']} ({song['year']})")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+

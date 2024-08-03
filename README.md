@@ -1,4 +1,4 @@
-# 🎈 Blank app template
+# 🎈 Use the StreamLit for Better UI Interface app template
 
 A simple Streamlit app template for you to modify!
 
